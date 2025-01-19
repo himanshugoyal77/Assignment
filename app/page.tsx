@@ -59,7 +59,7 @@ const LoginPage = () => {
             running in under a week. ❤
           </div>
           <Button
-            className="bg-[#4B35EA] mt-3 md:mt-5 w-[80%] text-white font-bold py-6"
+            className="bg-[#4B35EA] mt-5 md:mt-5 w-full md:w-[80%] text-white font-bold py-6"
             onClick={() => signIn()}
           >
             <span>
