@@ -7,6 +7,9 @@ import { useEffect } from "react";
 import { Triangle } from "react-loader-spinner";
 import TraingleLoader from "@/components/loader/TraingleLoader";
 import { Button } from "@/components/ui/button";
+import { loadGapiInsideDOM } from "gapi-script";
+
+const gapi = await loadGapiInsideDOM();
 
 const LoginPage = () => {
   const { status } = useSession();
