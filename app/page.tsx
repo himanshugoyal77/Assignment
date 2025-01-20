@@ -12,9 +12,10 @@ import { loadGapiInsideDOM } from "gapi-script";
 const gapi = await loadGapiInsideDOM();
 
 const LoginPage = () => {
-  const { status } = useSession();
+  const { status, data } = useSession();
 
   const router = useRouter();
+  console.log("data?.user.token", data?.user.token);
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -28,15 +29,19 @@ const LoginPage = () => {
     return <TraingleLoader />;
   }
 
+  const handleSignIn = () => {
+    gapi.auth2.getAuthInstance().signIn();
+  };
+
   return (
     <div
-      className="h-full w-full flex flex-col md:flex-row
-    md:items-center md:justify-center gap-4 md:gap-8 mt-20 md:mt-0
+      className="h-[calc(100%-120px)] w-full flex flex-col md:flex-row
+    md:items-center md:justify-center gap-4 md:gap-8 mt-4 md:mt-0
     "
     >
       <div
         className="
-       h-[30%] md:h-full w-full md:w-1/2 relative
+       h-[45%] md:h-full w-full md:w-1/2 relative
       "
       >
         <Image src="/hero.png" alt="logo" layout="fill" objectFit="contain" />
@@ -60,7 +65,7 @@ const LoginPage = () => {
           </div>
           <Button
             className="bg-[#4B35EA] mt-5 md:mt-5 w-full md:w-[80%] text-white font-bold py-6"
-            onClick={() => signIn()}
+            onClick={() => signIn("google")}
           >
             <span>
               <Image

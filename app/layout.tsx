@@ -5,12 +5,13 @@ import { ThemeContextProvider } from "@/context/ThemeContext";
 import ThemeProvider from "@/provider/ThemeProvider";
 import AuthProvider from "@/provider/authProvider";
 import Navbar from "@/components/navbar/Navbar";
+import useGoogleApi from "@/hooks/useGoogleApi";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Blog App",
-  description: "The best blog app!",
+  title: "WhiteCarrot",
+  description: "Calendar app for managing your events",
 };
 
 export default function RootLayout({
@@ -24,19 +25,12 @@ export default function RootLayout({
         <AuthProvider>
           <ThemeContextProvider>
             <ThemeProvider>
-              <div className="container">
-                <div className="wrapper">
-                  <Navbar />
-                  <div
-                    className="
-                  h-screen md:h-[calc(100vh-100px)] w-full md:px-8
-                  "
-                  >
-                    {children}
-                  </div>
-                  {/* <Footer /> */}
-                </div>
+              <div className="px-8 md:px-20 bg-[var(--bg)] text-[var(--textColor)] h-screen w-full">
+                <Navbar />
+
+                {children}
               </div>
+              {/* <Footer /> */}
             </ThemeProvider>
           </ThemeContextProvider>
         </AuthProvider>

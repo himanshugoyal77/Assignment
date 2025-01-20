@@ -25,6 +25,16 @@ import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -36,10 +46,16 @@ export function CalendarEventTable<TData, TValue>({
   data,
   setSelectedRows,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [sorting, setSorting] = useState<SortingState>([
+    {
+      id: "date",
+      desc: true,
+    },
+  ]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+  const [perPageCount, setPerPageCount] = useState(5);
 
   const table = useReactTable({
     data,
@@ -50,7 +66,7 @@ export function CalendarEventTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     initialState: {
       pagination: {
-        pageSize: 5, //custom default page size
+        pageSize: perPageCount, //custom default page size
       },
     },
     getSortedRowModel: getSortedRowModel(),
@@ -65,6 +81,12 @@ export function CalendarEventTable<TData, TValue>({
     },
   });
 
+  console.log("perPageCount", perPageCount);
+  useEffect(() => {
+    table.setPageSize(perPageCount);
+  }, [perPageCount]);
+
+  console.log("perPageCount", perPageCount);
   useEffect(() => {
     setSelectedRows(
       table.getSelectedRowModel().rows.map((row) => row.original)
@@ -140,7 +162,19 @@ export function CalendarEventTable<TData, TValue>({
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
           {table.getFilteredRowModel().rows.length} row(s) selected.
         </div>
-        <div className="space-x-2">
+        <div className="space-x-2 flex items-center">
+          <Select
+            value={perPageCount.toString()}
+            onValueChange={(value) => setPerPageCount(Number(value))}
+          >
+            <SelectTrigger className="bg-[var(--bg)] text-[var(--textColor)] select">
+              <SelectValue placeholder="value" />
+            </SelectTrigger>
+            <SelectContent className="bg-[var(--bg)] text-[var(--textColor)]">
+              <SelectItem value={"5"}>5</SelectItem>
+              <SelectItem value={"10"}>10</SelectItem>
+            </SelectContent>
+          </Select>
           <Button
             variant="outline"
             size="sm"
