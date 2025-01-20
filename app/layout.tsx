@@ -25,12 +25,12 @@ export default function RootLayout({
         <AuthProvider>
           <ThemeContextProvider>
             <ThemeProvider>
-              <div className="px-8 md:px-20 bg-[var(--bg)] text-[var(--textColor)] h-screen w-full">
-                <Navbar />
-
-                {children}
+              <div className="containerWrapper">
+                <div className="wrapper">
+                  <Navbar />
+                  {children}
+                </div>
               </div>
-              {/* <Footer /> */}
             </ThemeProvider>
           </ThemeContextProvider>
         </AuthProvider>

@@ -13,7 +13,7 @@ const ThemeProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   if (mounted) {
-    return <div className={theme}>{children}</div>;
+    return <div className={`${theme}`}>{children}</div>;
   }
 };
 

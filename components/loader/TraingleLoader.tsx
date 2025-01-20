@@ -5,7 +5,7 @@ const TraingleLoader = () => {
   return (
     <div
       className="
-     h-[calc(100vh-200px)] w-full 
+     h-[calc(100vh-100px)] w-full 
         flex items-center justify-center
     "
     >

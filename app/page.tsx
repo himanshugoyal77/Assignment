@@ -15,7 +15,6 @@ const LoginPage = () => {
   const { status, data } = useSession();
 
   const router = useRouter();
-  console.log("data?.user.token", data?.user.token);
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -35,13 +34,13 @@ const LoginPage = () => {
 
   return (
     <div
-      className="h-[calc(100%-120px)] w-full flex flex-col md:flex-row
+      className="h-full md:h-[calc(80vh)] w-full flex flex-col md:flex-row
     md:items-center md:justify-center gap-4 md:gap-8 mt-4 md:mt-0
     "
     >
       <div
         className="
-       h-[45%] md:h-full w-full md:w-1/2 relative
+        h-[180px] md:h-full w-full md:w-1/2 relative
       "
       >
         <Image src="/hero.png" alt="logo" layout="fill" objectFit="contain" />

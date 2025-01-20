@@ -18,7 +18,7 @@ import { CalendarEventTable } from "@/components/table/DataTable";
 import { Checkbox } from "@/components/ui/checkbox";
 import CsvDownloader from "react-csv-downloader";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown, SortAsc } from "lucide-react";
+import { ArrowUpDown, HardDriveDownload, SortAsc } from "lucide-react";
 import { gapi } from "gapi-script";
 import axios from "axios";
 
@@ -53,7 +53,6 @@ const Home = () => {
     {
       id: "date",
       accessorKey: "date",
-      sortingFn: "datetime",
       header: ({ column }) => {
         return (
           <Button
@@ -66,10 +65,24 @@ const Home = () => {
         );
       },
       cell: ({ row }) => (
-        <div className="lowercase">{row.getValue("date")}</div>
+        <div className="lowercase">
+          {new Date(row.getValue("date")).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          })}
+        </div>
       ),
       meta: {
         filterKey: "date",
+      },
+      filterFn: (row, columnId, filterValue) => {
+        console.log("filtervalue", filterValue);
+        const rowDate = new Date(row.getValue(columnId));
+        const filterDate = new Date(filterValue);
+
+        // Include the row if its date is after the filter date
+        return rowDate > filterDate;
       },
     },
     {
@@ -113,7 +126,7 @@ const Home = () => {
       const events = response.data.items.map((event: any) => {
         return {
           title: event.summary,
-          date: new Date(event.start.dateTime).toLocaleDateString(),
+          date: event.start.dateTime,
           time: event.start.timeZone,
           organizer: event.organizer.email,
           status: event.status,
@@ -137,7 +150,7 @@ const Home = () => {
   }
 
   return (
-    <div className="h-full pb-12 md:pb-0">
+    <div className="pb-12 md:pb-0">
       {session ? (
         <>
           <CalendarEventTable
@@ -146,15 +159,18 @@ const Home = () => {
             setSelectedRows={setSelectedRows}
           />
           <p
-            className="mx-auto text-center mt-6 bg-[#4B35EA] text-white py-3
+            className="mx-auto text-center mt-6 bg-slate-100 text-black py-2
           w-[200px] 
           cursor-pointer
           rounded-lg
-          hover:bg-purple-100
-          hover:text-black
-          shadow-md
+          hover:bg-[#4B35EA]
+          hover:text-white
+          text-sm font-bold
+          shadow-md flex items-center gap-2 justify-center
+          transition-all duration-300 ease-in-out
           "
           >
+            <HardDriveDownload size={14} />
             <CsvDownloader
               filename="myfile"
               extension=".csv"

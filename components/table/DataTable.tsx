@@ -34,6 +34,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import FilterInput from "../FilterTable";
+import { DatePicker } from "../DatePicker";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -46,13 +48,22 @@ export function CalendarEventTable<TData, TValue>({
   data,
   setSelectedRows,
 }: DataTableProps<TData, TValue>) {
+  const [filterDate, setFilterDate] = useState(
+    // llast 10 years
+    new Date(new Date().setFullYear(new Date().getFullYear() - 10))
+  );
   const [sorting, setSorting] = useState<SortingState>([
+    // {
+    //   id: "date",
+    //   desc: true,
+    // },
+  ]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
     {
       id: "date",
-      desc: true,
+      value: filterDate,
     },
   ]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
   const [perPageCount, setPerPageCount] = useState(5);
@@ -94,17 +105,15 @@ export function CalendarEventTable<TData, TValue>({
   }, [rowSelection]);
 
   return (
-    <div className="w-full">
-      <div className="flex items-center py-4">
-        <Input
-          placeholder="Filter emails..."
-          value={
-            (table.getColumn("organizer")?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table.getColumn("organizer")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
+    <div className="h-full w-full">
+      <div className="flex flex-col md:flex-row items-center py-4 gap-5">
+        <FilterInput table={table} />
+        <input
+          type="date"
+          value={filterDate.toString()}
+          onChange={(e) => {
+            setColumnFilters([{ id: "date", value: new Date(e.target.value) }]);
+          }}
         />
       </div>
       <div className="rounded-md border">
