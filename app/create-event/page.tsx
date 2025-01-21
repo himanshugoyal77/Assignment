@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import TraingleLoader from "@/components/loader/TraingleLoader";
 import { DateTimePicker } from "@/components/DateTimePicker";
@@ -17,7 +17,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
 import { DialogClose } from "@radix-ui/react-dialog";
 
 function CreateEventPage({ mutate }: { mutate: () => void }) {

@@ -2,11 +2,7 @@
 
 import {
   useSession,
-  signIn,
-  signOut,
   getSession,
-  getProviders,
-  getCsrfToken,
 } from "next-auth/react";
 import { useEffect, useMemo, useState } from "react";
 import TraingleLoader from "@/components/loader/TraingleLoader";
@@ -18,7 +14,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import CsvDownloader from "react-csv-downloader";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown, HardDriveDownload, SortAsc } from "lucide-react";
-import { gapi } from "gapi-script";
 import axios from "axios";
 import useSWR from "swr";
 

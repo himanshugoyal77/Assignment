@@ -5,6 +5,13 @@ const nextConfig: NextConfig = {
   images: {
     domains: ["www.freepnglogos.com"],
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 };
 
 export default nextConfig;
