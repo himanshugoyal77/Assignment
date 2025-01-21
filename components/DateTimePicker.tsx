@@ -57,7 +57,7 @@ export function DateTimePicker({
       <PopoverTrigger asChild>
         <Button
           className={cn(
-            "w-[70%] md:w-40 h-9 px-3 md:px-4 rounded-md border text-black font-semibold text-sm cursor-pointer",
+            "w-[70%] md:w-40 h-9 px-3 md:px-4 rounded-md border font-semibold text-sm cursor-pointer",
             !date && "text-muted-foreground"
           )}
         >

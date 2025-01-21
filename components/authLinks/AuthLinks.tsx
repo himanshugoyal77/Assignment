@@ -22,7 +22,7 @@ const AuthLinks = () => {
           Logout
         </Button>
       )}
-      <div onClick={() => setOpen(!open)}>
+      <div className={styles.burger} onClick={() => setOpen(!open)}>
         {!open ? <Menu size={24} /> : <X size={24} />}
       </div>
       {open && (
