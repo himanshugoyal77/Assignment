@@ -1,5 +1,5 @@
 "use client";
-
+import { ToastContainer, toast } from "react-toastify";
 import { useSession, getSession } from "next-auth/react";
 import { useEffect, useMemo, useState } from "react";
 import TraingleLoader from "@/components/loader/TraingleLoader";
@@ -41,6 +41,7 @@ const Home = () => {
     {
       accessorKey: "title",
       header: "Title",
+      size: 270,
     },
     {
       id: "date",
@@ -79,10 +80,30 @@ const Home = () => {
     {
       accessorKey: "time",
       header: "Time",
+      cell: ({ row }) => {
+        const date = new Date(row.getValue("time"));
+        let hours = date.getHours();
+        const minutes = date.getMinutes();
+        const amPm = hours >= 12 ? "PM" : "AM";
+        hours = hours % 12 || 12;
+        const formattedMinutes = minutes.toString().padStart(2, "0");
+
+        return (
+          <div className="lowercase">
+            {hours}:{formattedMinutes} {amPm}
+          </div>
+        );
+      },
     },
     {
       accessorKey: "organizer",
+
+      cell: ({ row }) => {
+        const email: string = row.getValue("organizer");
+        return <a href={`mailto:${email}`}>{email}</a>;
+      },
       header: "Organizer",
+      maxSize: 200,
     },
     {
       accessorKey: "status",
@@ -113,7 +134,7 @@ const Home = () => {
         return {
           title: event.summary,
           date: event.start.dateTime,
-          time: event.start.timeZone,
+          time: event.start.dateTime,
           organizer: event.organizer.email,
           status: event.status,
         };
@@ -132,7 +153,6 @@ const Home = () => {
   );
 
   useEffect(() => {
-   
     getSession().then((session) => {
       localStorage.setItem("token", (session as any)?.accessToken);
       mutate();
@@ -151,38 +171,47 @@ const Home = () => {
             data={events}
             columns={columns}
             setSelectedRows={setSelectedRows}
-            mutate={() => {}}
+            mutate={mutate}
           />
-          <p
-            className="mx-auto text-center mt-6 bg-slate-100 text-black py-2
-          w-[200px] 
-          cursor-pointer
-          rounded-lg
-          hover:bg-[#4B35EA]
-          hover:text-white
-          text-sm font-bold
-          shadow-md flex items-center gap-2 justify-center
-          transition-all duration-300 ease-in-out
-          "
+
+          <CsvDownloader
+            filename="MyCalendarEvents"
+            extension=".csv"
+            columns={[
+              { id: "title", displayName: "Title" },
+              { id: "date", displayName: "Date" },
+              { id: "time", displayName: "Time" },
+              { id: "organizer", displayName: "Organizer" },
+              { id: "status", displayName: "Status" },
+            ]}
+            datas={selectedRows.map((row) => ({
+              ...row,
+              date: row.date.toString(),
+            }))}
+            text="DOWNLOAD"
+            disabled={selectedRows?.length === 0}
           >
-            <HardDriveDownload size={14} />
-            <CsvDownloader
-              filename="myfile"
-              extension=".csv"
-              columns={[
-                { id: "title", displayName: "Title" },
-                { id: "date", displayName: "Date" },
-                { id: "time", displayName: "Time" },
-                { id: "organizer", displayName: "Organizer" },
-                { id: "status", displayName: "Status" },
-              ]}
-              datas={selectedRows.map((row) => ({
-                ...row,
-                date: row.date.toString(),
-              }))}
-              text="DOWNLOAD"
-            />
-          </p>
+            <Button
+              onClick={() => {
+                if (selectedRows?.length === 0) {
+                  toast.error(
+                    "Please select atleast one row to download",
+
+                    {
+                      position: "bottom-right",
+                      style: {},
+                    }
+                  );
+                }
+              }}
+              className={`mt-4`}
+              variant={selectedRows?.length === 0 ? "outline" : "default"}
+            >
+              <HardDriveDownload size={14} />
+              Download
+            </Button>
+          </CsvDownloader>
+          <ToastContainer />
         </>
       ) : (
         <TraingleLoader />

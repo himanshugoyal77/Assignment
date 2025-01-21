@@ -76,7 +76,7 @@ function CreateEventPage({ mutate }: { mutate: () => void }) {
       <DialogTrigger asChild>
         <Button>Create New Event</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[380px] w-96">
+      <DialogContent className="max-w-[350px] md:max-w-full w-[400px]">
         <DialogHeader>
           <DialogTitle>Hello, {session?.user.name} 👋</DialogTitle>
           <DialogDescription>
@@ -89,15 +89,16 @@ function CreateEventPage({ mutate }: { mutate: () => void }) {
               <div className="w-full py-3 px-5">
                 <p>Select Start date :</p>
                 <DateTimePicker date={start} setDate={setStart} />
-                <p>End of your event</p>
+
+                <p className="mt-3">End of your event</p>
                 <DateTimePicker date={end} setDate={setEnd} />
-                <p>Event name</p>
+                <p className="mt-3">Event name</p>
                 <Input
                   type="text"
                   required
                   onChange={(e) => setEventName(e.target.value)}
                 />
-                <p>Event description</p>
+                <p className="mt-3">Event description</p>
                 <Input
                   type="text"
                   onChange={(e) => setEventDescription(e.target.value)}
