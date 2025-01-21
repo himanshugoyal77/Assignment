@@ -16,13 +16,8 @@ const Navbar = () => {
 
       <div className={styles.links}>
         <ThemeToggle />
-        <Link href="/" className={styles.link}>
-          Homepage
-        </Link>
-        <Link
-          href="https://himanshu-goyal-delta.vercel.app/#contact"
-          className={styles.link}
-        >
+
+        <Link href="https://himanshu-goyal.netlify.app" className={styles.link}>
           Contact
         </Link>
 

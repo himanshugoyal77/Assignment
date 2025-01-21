@@ -8,7 +8,6 @@ import {
   getProviders,
   getCsrfToken,
 } from "next-auth/react";
-import useGoogleApi from "@/hooks/useGoogleApi";
 import { useEffect, useMemo, useState } from "react";
 import TraingleLoader from "@/components/loader/TraingleLoader";
 import { useRouter } from "next/navigation";
@@ -19,89 +18,16 @@ import { Checkbox } from "@/components/ui/checkbox";
 import CsvDownloader from "react-csv-downloader";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown, HardDriveDownload, SortAsc } from "lucide-react";
-import { gapi } from "gapi-script";
+
 import axios from "axios";
+import useSWR from "swr";
+
+import dynamic from "next/dynamic";
+import { columns } from "@/components/table/TableColumns";
 
 const Home = () => {
-  const columns: ColumnDef<CalenderEventType, string>[] = [
-    {
-      id: "select",
-      header: ({ table }) => (
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-    },
-    {
-      accessorKey: "title",
-      header: "Title",
-    },
-    {
-      id: "date",
-      accessorKey: "date",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Date
-            <ArrowUpDown />
-          </Button>
-        );
-      },
-      cell: ({ row }) => (
-        <div className="lowercase">
-          {new Date(row.getValue("date")).toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-          })}
-        </div>
-      ),
-      meta: {
-        filterKey: "date",
-      },
-      filterFn: (row, columnId, filterValue) => {
-        console.log("filtervalue", filterValue);
-        const rowDate = new Date(row.getValue(columnId));
-        const filterDate = new Date(filterValue);
-
-        // Include the row if its date is after the filter date
-        return rowDate > filterDate;
-      },
-    },
-    {
-      accessorKey: "time",
-      header: "Time",
-    },
-    {
-      accessorKey: "organizer",
-      header: "Organizer",
-    },
-    {
-      accessorKey: "status",
-      header: "Status",
-    },
-  ];
   const { data: session, status } = useSession();
   const router = useRouter();
-  const { listEvents, isInitialized } = useGoogleApi();
-  const [loading, setLoading] = useState(true);
   const [selectedRows, setSelectedRows] = useState<CalenderEventType[]>([]);
   const [events, setEvents] = useState<CalenderEventType[]>([]);
 
@@ -112,16 +38,13 @@ const Home = () => {
     }
   }, [status]);
 
-  const getEvents = async (token: string) => {
+  const getEvents = async (url: string) => {
     try {
-      const response = await axios.get(
-        "https://www.googleapis.com/calendar/v3/calendars/primary/events",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${(session as any)?.accessToken}`,
+        },
+      });
 
       const events = response.data.items.map((event: any) => {
         return {
@@ -133,19 +56,29 @@ const Home = () => {
         };
       });
       setEvents(events);
-      setLoading(false);
     } catch (error) {
       console.log("error", error);
     }
   };
 
-  useEffect(() => {
-    getSession().then((session) => {
-      getEvents((session as any)?.accessToken);
-    });
-  }, [isInitialized]);
+  const { data, mutate, isLoading } = useSWR(
+    (session as any)?.accessToken
+      ? "https://www.googleapis.com/calendar/v3/calendars/primary/events"
+      : null,
+    getEvents
+  );
 
-  if (status === "loading" || loading) {
+  useEffect(() => {
+    console.log("getting token", (session as any)?.accessToken);
+    getSession().then((session) => {
+      localStorage.setItem("token", (session as any)?.accessToken);
+      mutate();
+    });
+  }, []);
+
+  // const mutate = () => {};
+
+  if (status === "loading") {
     return <TraingleLoader />;
   }
 
@@ -157,6 +90,7 @@ const Home = () => {
             data={events}
             columns={columns}
             setSelectedRows={setSelectedRows}
+            mutate={mutate}
           />
           <p
             className="mx-auto text-center mt-6 bg-slate-100 text-black py-2

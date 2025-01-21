@@ -15,7 +15,6 @@ const TraingleLoader = () => {
         width="80"
         color="#4B35EA"
         ariaLabel="triangle-loading"
-        wrapperStyle={{}}
         wrapperClass=""
       />
     </div>

@@ -4,12 +4,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import { useEffect } from "react";
-import { Triangle } from "react-loader-spinner";
 import TraingleLoader from "@/components/loader/TraingleLoader";
 import { Button } from "@/components/ui/button";
-import { loadGapiInsideDOM } from "gapi-script";
-
-const gapi = await loadGapiInsideDOM();
 
 const LoginPage = () => {
   const { status, data } = useSession();
@@ -27,10 +23,6 @@ const LoginPage = () => {
   if (status === "loading") {
     return <TraingleLoader />;
   }
-
-  const handleSignIn = () => {
-    gapi.auth2.getAuthInstance().signIn();
-  };
 
   return (
     <div

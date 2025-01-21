@@ -23,7 +23,6 @@ import {
 } from "@/components/ui/table";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { Input } from "../ui/input";
 
 import {
   Select,
@@ -35,28 +34,32 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import FilterInput from "../FilterTable";
-import { DatePicker } from "../DatePicker";
+
+import { useRouter } from "next/navigation";
+import CreateEventPage from "@/app/create-event/page";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   setSelectedRows: (rows: TData[]) => void;
+  mutate: () => void;
 }
 
 export function CalendarEventTable<TData, TValue>({
   columns,
   data,
   setSelectedRows,
+  mutate,
 }: DataTableProps<TData, TValue>) {
+  const router = useRouter();
   const [filterDate, setFilterDate] = useState(
-    // llast 10 years
-    new Date(new Date().setFullYear(new Date().getFullYear() - 10))
+    new Date(new Date().setFullYear(new Date().getFullYear() - 40))
   );
   const [sorting, setSorting] = useState<SortingState>([
-    // {
-    //   id: "date",
-    //   desc: true,
-    // },
+    {
+      id: "date",
+      desc: true,
+    },
   ]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
     {
@@ -106,15 +109,26 @@ export function CalendarEventTable<TData, TValue>({
 
   return (
     <div className="h-full w-full">
-      <div className="flex flex-col md:flex-row items-center py-4 gap-5">
+      <div
+        className="w-[300px] md:w-full flex
+      flex-col md:flex-row
+      items-center justify-between mb-5"
+      >
         <FilterInput table={table} />
-        <input
-          type="date"
-          value={filterDate.toString()}
-          onChange={(e) => {
-            setColumnFilters([{ id: "date", value: new Date(e.target.value) }]);
-          }}
-        />
+
+        <div className="w-min flex items-center gap-2 md:gap-5 mt-3 md:mt-0">
+          <input
+            type="date"
+            value={filterDate.toString()}
+            onChange={(e) => {
+              setColumnFilters([
+                { id: "date", value: new Date(e.target.value) },
+              ]);
+            }}
+            className="w-36 md:w-40 h-9 px-3 md:px-4 rounded-md border text-black font-semibold text-sm cursor-pointer"
+          />
+          <CreateEventPage mutate={mutate} />
+        </div>
       </div>
       <div className="rounded-md border">
         <Table>

@@ -17,7 +17,7 @@ function FilterInput({ table }: { table: any }) {
       placeholder="Filter email or Search title"
       value={filterValue}
       onChange={handleFilterChange}
-      className="w-[280px]"
+      className="max-w-[300px]"
     />
   );
 }
