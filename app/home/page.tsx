@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  useSession,
-  getSession,
-} from "next-auth/react";
+import { useSession, getSession } from "next-auth/react";
 import { useEffect, useMemo, useState } from "react";
 import TraingleLoader from "@/components/loader/TraingleLoader";
 import { useRouter } from "next/navigation";
@@ -72,7 +69,6 @@ const Home = () => {
         filterKey: "date",
       },
       filterFn: (row, columnId, filterValue) => {
-        console.log("filtervalue", filterValue);
         const rowDate = new Date(row.getValue(columnId));
         const filterDate = new Date(filterValue);
 
@@ -136,7 +132,7 @@ const Home = () => {
   );
 
   useEffect(() => {
-    console.log("getting token", (session as any)?.accessToken);
+   
     getSession().then((session) => {
       localStorage.setItem("token", (session as any)?.accessToken);
       mutate();

@@ -56,18 +56,13 @@ export function DateTimePicker({
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="outline"
           className={cn(
-            "w-full justify-start text-left font-normal",
+            "w-[70%] md:w-40 h-9 px-3 md:px-4 rounded-md border text-black font-semibold text-sm cursor-pointer",
             !date && "text-muted-foreground"
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? (
-            format(date, "MM/dd/yyyy hh:mm aa")
-          ) : (
-            <span>MM/DD/YYYY hh:mm aa</span>
-          )}
+          {date ? format(date, "MM/dd/yyyy") : <span>MM/DD/YYYY hh:mm aa</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">

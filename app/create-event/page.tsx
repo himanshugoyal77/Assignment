@@ -41,7 +41,6 @@ function CreateEventPage({ mutate }: { mutate: () => void }) {
   }
 
   async function createCalendarEvent() {
-    console.log("Creating calendar event");
     const event = {
       summary: eventName,
       description: eventDescription,
@@ -68,7 +67,6 @@ function CreateEventPage({ mutate }: { mutate: () => void }) {
         return data.json();
       })
       .then((data) => {
-        console.log(data);
         alert("Event created, check your Google Calendar!");
       });
   }

@@ -4,6 +4,8 @@ import styles from "./authLinks.module.css";
 import { useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { Button } from "../ui/button";
+import { Menu, X } from "lucide-react";
 
 const AuthLinks = () => {
   const [open, setOpen] = useState(false);
@@ -11,29 +13,29 @@ const AuthLinks = () => {
   const { status, data } = useSession();
   const router = useRouter();
 
-  console.log(status);
-
   return (
     <>
       {status === "unauthenticated" ? (
         <span></span>
       ) : (
-        <span className={styles.link} onClick={() => signOut()}>
+        <Button className={styles.link} onClick={() => signOut()}>
           Logout
-        </span>
+        </Button>
       )}
-      <div className={styles.burger} onClick={() => setOpen(!open)}>
-        <div className={styles.line}></div>
-        <div className={styles.line}></div>
-        <div className={styles.line}></div>
+      <div onClick={() => setOpen(!open)}>
+        {!open ? <Menu size={24} /> : <X size={24} />}
       </div>
       {open && (
         <div className={styles.responsiveMenu}>
-          <Link href="https://himanshu-goyal.netlify.app">Contact</Link>
+          <Button className="w-28">
+            {" "}
+            <Link href="https://himanshu-goyal.netlify.app">Contact</Link>
+          </Button>
           {status === "unauthenticated" ? (
             <span></span>
           ) : (
-            <span
+            <Button
+              className="w-28"
               onClick={() => {
                 signOut();
                 localStorage.removeItem("token");
@@ -41,7 +43,7 @@ const AuthLinks = () => {
               }}
             >
               Logout
-            </span>
+            </Button>
           )}
         </div>
       )}

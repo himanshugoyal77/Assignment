@@ -58,7 +58,6 @@ export const columns: ColumnDef<CalenderEventType, string>[] = [
       filterKey: "date",
     },
     filterFn: (row, columnId, filterValue) => {
-      console.log("filtervalue", filterValue);
       const rowDate = new Date(row.getValue(columnId));
       const filterDate = new Date(filterValue);
 

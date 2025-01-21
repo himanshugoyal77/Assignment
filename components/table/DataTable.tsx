@@ -37,6 +37,7 @@ import FilterInput from "../FilterTable";
 
 import { useRouter } from "next/navigation";
 import CreateEventPage from "@/app/create-event/page";
+import { DateTimePicker } from "../DateTimePicker";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -95,29 +96,31 @@ export function CalendarEventTable<TData, TValue>({
     },
   });
 
-  console.log("perPageCount", perPageCount);
   useEffect(() => {
     table.setPageSize(perPageCount);
   }, [perPageCount]);
 
-  console.log("perPageCount", perPageCount);
   useEffect(() => {
     setSelectedRows(
       table.getSelectedRowModel().rows.map((row) => row.original)
     );
   }, [rowSelection]);
 
+  useEffect(() => {
+    setColumnFilters([{ id: "date", value: filterDate }]);
+  }, [filterDate]);
+
   return (
     <div className="h-full w-full">
       <div
-        className="w-[300px] md:w-full flex
+        className="w-full md:w-full flex
       flex-col md:flex-row
       items-center justify-between mb-5"
       >
         <FilterInput table={table} />
 
         <div className="w-min flex items-center gap-2 md:gap-5 mt-3 md:mt-0">
-          <input
+          {/* <input
             type="date"
             value={filterDate.toString()}
             onChange={(e) => {
@@ -126,7 +129,9 @@ export function CalendarEventTable<TData, TValue>({
               ]);
             }}
             className="w-36 md:w-40 h-9 px-3 md:px-4 rounded-md border text-black font-semibold text-sm cursor-pointer"
-          />
+          /> */}
+
+          <DateTimePicker setDate={setFilterDate} date={filterDate} />
           <CreateEventPage mutate={mutate} />
         </div>
       </div>
